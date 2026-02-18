@@ -1,0 +1,24 @@
+# Virtual environment
+.venv/
+
+# Kaggle credentials
+.kaggle/
+
+# Python
+__pycache__/
+*.pyc
+
+# Model artifacts
+*.joblib
+
+# Data
+data/
+
+# Streamlit
+.streamlit/
+
+# VSCode
+.vscode/
+
+# Claude
+.claude/
