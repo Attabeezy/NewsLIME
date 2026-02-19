@@ -22,4 +22,6 @@ data/
 
 # Claude
 .claude/
+
+# Unnecessary Scripts
 tempCodeRunnerFile.py
