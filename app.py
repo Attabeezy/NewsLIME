@@ -7,9 +7,7 @@ import joblib
 import numpy as np
 import streamlit as st
 from lime.lime_text import LimeTextExplainer
-from nltk.corpus import stopwords
 
-STOPWORDS = set(stopwords.words("english"))
 BASE_DIR = os.path.dirname(__file__)
 
 
@@ -22,18 +20,17 @@ def load_model():
 
 
 def clean_text(text):
-    """Clean text: lowercase, strip HTML, remove special chars and stopwords."""
+    """Simple text cleaning: lowercase and strip HTML/special chars."""
     text = str(text).lower()
     text = re.sub(r"<.*?>", "", text)
     text = re.sub(r"[^a-z\s]", "", text)
-    tokens = text.split()
-    tokens = [t for t in tokens if t not in STOPWORDS]
-    return " ".join(tokens)
+    return text
 
 
 def predict_proba(texts):
     """Prediction function compatible with LIME (takes list of raw strings)."""
     model, vectorizer = load_model()
+    # Cleaning is minimal now as vectorizer handles stopwords
     cleaned = [clean_text(t) for t in texts]
     tfidf = vectorizer.transform(cleaned)
     return model.predict_proba(tfidf)

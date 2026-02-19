@@ -71,6 +71,7 @@ def train():
     print("Vectorizing with TF-IDF...")
     vectorizer = TfidfVectorizer(max_features=5000, ngram_range=(1, 2))
     X_train_tfidf = vectorizer.fit_transform(X_train)
+    X_valid_tfidf = vectorizer.transform(X_valid)
     X_test_tfidf = vectorizer.transform(X_test)
 
     print("Training Random Forest...")
@@ -78,12 +79,14 @@ def train():
     model.fit(X_train_tfidf, y_train)
 
     y_train_pred = model.predict(X_train_tfidf)
-
+    y_valid_pred = model.predict(X_valid_tfidf)
     y_test_pred = model.predict(X_test_tfidf)
 
     print("\n=== Classification Report ===")
     print("Training Set:")
     print(classification_report(y_train, y_train_pred, target_names=["Real", "Fake"]))
+    print("Validation Set:")
+    print(classification_report(y_valid, y_valid_pred, target_names=["Real", "Fake"]))
     print("Test Set:")
     print(classification_report(y_test, y_test_pred, target_names=["Real", "Fake"]))
 
@@ -91,13 +94,17 @@ def train():
     print("Training Set:")
     cm = confusion_matrix(y_train, y_train_pred)
     print(cm)
+    print("Validation Set:")
+    cm = confusion_matrix(y_valid, y_valid_pred)
+    print(cm)
     print("Test Set:")
     cm = confusion_matrix(y_test, y_test_pred)
     print(cm)
 
     accuracy_train = np.mean(y_train_pred == y_train)
+    accuracy_valid = np.mean(y_valid_pred == y_valid)
     accuracy_test = np.mean(y_test_pred == y_test)
-    print(f"\nAccuracy: {accuracy_train:.4f} (Train), {accuracy_test:.4f} (Test)")
+    print(f"\nAccuracy: {accuracy_train:.4f} (Train), {accuracy_valid:.4f} (Validation), {accuracy_test:.4f} (Test)")
 
     if accuracy_test < 0.85:
         print("WARNING: Accuracy below 85%. Consider adjusting ngram_range or max_features.")
@@ -105,8 +112,8 @@ def train():
     # Save model and vectorizer
     model_path = os.path.join(BASE_DIR, "model.joblib")
     vec_path = os.path.join(BASE_DIR, "vectorizer.joblib")
-    joblib.dump(model, model_path)
-    joblib.dump(vectorizer, vec_path)
+    joblib.dump(model, model_path, compress=3)
+    joblib.dump(vectorizer, vec_path, compress=3)
     print(f"\nModel saved to {model_path}")
     print(f"Vectorizer saved to {vec_path}")
 
