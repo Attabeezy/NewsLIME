@@ -47,4 +47,4 @@ streamlit run app.py
 
 ## detailed Documentation
 
-For a deep dive into the architecture, dataset, and model performance, please see the [Technical Report](TECHNICAL_REPORT.md).
+For a deep dive into the architecture, dataset, and model performance, please see the [Technical Report](REPORT.md).
